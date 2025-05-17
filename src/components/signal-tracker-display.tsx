@@ -45,12 +45,12 @@ export default function SignalTrackerDisplay({ trackedNetworkInfo }: SignalTrack
 
   const gaugeData = [{ name: 'strength', value: normalizedStrength, fill: gaugeColor }];
 
-  // Ticks for the PolarAngleAxis (0 to 100 scale)
+  // Ticks for the PolarAngleAxis (0 to 100 scale, labels are dBm)
   const gaugeTicks = [
     { value: 0, label: `${GAUGE_MIN_DB}` }, // Corresponds to -100 dBm
-    { value: 25, label: `${GAUGE_MIN_DB + (GAUGE_MAX_DB - GAUGE_MIN_DB) * 0.25}` },
-    { value: 50, label: `${GAUGE_MIN_DB + (GAUGE_MAX_DB - GAUGE_MIN_DB) * 0.5}` },
-    { value: 75, label: `${GAUGE_MIN_DB + (GAUGE_MAX_DB - GAUGE_MIN_DB) * 0.75}` },
+    { value: 25, label: `${Math.round(GAUGE_MIN_DB + (GAUGE_MAX_DB - GAUGE_MIN_DB) * 0.25)}` }, // -80
+    { value: 50, label: `${Math.round(GAUGE_MIN_DB + (GAUGE_MAX_DB - GAUGE_MIN_DB) * 0.5)}` },  // -60
+    { value: 75, label: `${Math.round(GAUGE_MIN_DB + (GAUGE_MAX_DB - GAUGE_MIN_DB) * 0.75)}` }, // -40
     { value: 100, label: `${GAUGE_MAX_DB}` }, // Corresponds to -20 dBm
   ];
 
@@ -84,10 +84,10 @@ export default function SignalTrackerDisplay({ trackedNetworkInfo }: SignalTrack
               ticks={gaugeTicks.map(t => t.value)}
               tickFormatter={(value) => {
                 const tickObj = gaugeTicks.find(t => t.value === value);
-                return tickObj ? `${Math.round(parseFloat(tickObj.label))}` : '';
+                return tickObj ? tickObj.label : '';
               }}
-              stroke="hsl(var(--muted-foreground))"
-              fontSize={10}
+              stroke="hsl(var(--foreground))" // Brighter color for ticks and labels
+              fontSize={11} // Slightly larger font size for ticks
             />
             <RadialBar
               minAngle={15}
@@ -98,10 +98,11 @@ export default function SignalTrackerDisplay({ trackedNetworkInfo }: SignalTrack
               animationDuration={700}
               animationEasing="ease-out"
             />
+            {/* Tooltip removed as per previous request for non-interactive graph */}
           </RadialBarChart>
         </ResponsiveContainer>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4 text-center pointer-events-none">
-          <div className="text-5xl font-bold text-foreground" style={{ color: gaugeColor }}>
+          <div className="text-5xl font-bold" style={{ color: gaugeColor }}>
             {network.strength}
           </div>
           <div className="text-sm text-muted-foreground">dBm</div>
@@ -110,3 +111,4 @@ export default function SignalTrackerDisplay({ trackedNetworkInfo }: SignalTrack
     </Card>
   );
 }
+
