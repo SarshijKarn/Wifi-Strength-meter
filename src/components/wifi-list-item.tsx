@@ -35,7 +35,7 @@ export default function WifiListItem({ network, onNetworkSelect, isSelected }: W
   return (
     <Card 
       className={cn(
-        "mb-3 shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer",
+        "group mb-3 shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer",
         getSignalStrengthColorClass(network.strength),
         isSelected && "ring-2 ring-primary shadow-xl"
       )}
@@ -50,7 +50,7 @@ export default function WifiListItem({ network, onNetworkSelect, isSelected }: W
           <div className="flex items-center space-x-3">
             <Wifi className="h-6 w-6 text-primary" />
             <div>
-              <h3 className="text-lg font-semibold text-foreground">{network.ssid}</h3>
+              <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-150">{network.ssid}</h3>
               <p className="text-xs text-muted-foreground">{network.bssid}</p>
             </div>
           </div>
