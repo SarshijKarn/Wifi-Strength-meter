@@ -4,7 +4,7 @@
 import type { WifiNetwork } from '@/types/wifi';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { RadialBarChart, RadialBar, PolarAngleAxis, PolarRadiusAxis, PolarGrid, Tooltip, ResponsiveContainer, Label } from 'recharts';
+import { RadialBarChart, RadialBar, PolarAngleAxis, PolarRadiusAxis, PolarGrid, ResponsiveContainer, Label } from 'recharts';
 import { TrendingUp } from 'lucide-react';
 import { format } from 'date-fns';
 import { useMemo, useCallback } from 'react';
@@ -19,7 +19,6 @@ interface SignalTrackerDisplayProps {
 export default function SignalTrackerDisplay({ trackedNetworkInfo }: SignalTrackerDisplayProps) {
   const { network, history } = trackedNetworkInfo;
 
-  // Map dBm to 0-100 for Progress component and RadialBarChart. Assume range -100dBm (worst) to -20dBm (best)
   const strengthToProgressValue = useCallback((strength: number): number => {
     const minDb = -100;
     const maxDb = -20;
@@ -118,23 +117,6 @@ export default function SignalTrackerDisplay({ trackedNetworkInfo }: SignalTrack
                   background={{ fill: 'hsl(var(--muted))', opacity: 0.1 }}
                   cornerRadius={2}
                   isAnimationActive={false}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'hsl(var(--background))',
-                    borderColor: 'hsl(var(--border))',
-                    borderRadius: 'var(--radius)',
-                    fontSize: '12px',
-                    boxShadow: '0 4px 12px hsla(var(--foreground), 0.1)',
-                  }}
-                  labelFormatter={(label) => `Time: ${label}`}
-                  formatter={(value: number, name: string, props: any) => {
-                    const originalStrength = props.payload?.original_strength;
-                    if (originalStrength !== undefined) {
-                       return [`${originalStrength} dBm (Norm: ${Number(value).toFixed(0)}%)`, "Signal"];
-                    }
-                    return [`${Number(value).toFixed(0)}%`, "Normalized Strength"];
-                  }}
                 />
               </RadialBarChart>
             </ResponsiveContainer>
