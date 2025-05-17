@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { WifiNetwork } from '@/types/wifi';
@@ -8,9 +9,11 @@ import { WifiOff } from 'lucide-react';
 interface WifiListProps {
   networks: WifiNetwork[];
   isLoading: boolean;
+  selectedNetworkId: string | null;
+  onNetworkSelect: (network: WifiNetwork) => void;
 }
 
-export default function WifiList({ networks, isLoading }: WifiListProps) {
+export default function WifiList({ networks, isLoading, selectedNetworkId, onNetworkSelect }: WifiListProps) {
   if (isLoading) {
     return (
       <div className="space-y-3 mt-6">
@@ -44,8 +47,14 @@ export default function WifiList({ networks, isLoading }: WifiListProps) {
 
   return (
     <div className="mt-6 space-y-0">
+      <h2 className="text-xl font-semibold text-foreground mb-3">Available Networks</h2>
       {networks.map(network => (
-        <WifiListItem key={network.id} network={network} />
+        <WifiListItem 
+          key={network.id} 
+          network={network}
+          onNetworkSelect={onNetworkSelect}
+          isSelected={network.id === selectedNetworkId}
+        />
       ))}
     </div>
   );

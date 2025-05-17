@@ -1,15 +1,19 @@
+
 "use client";
 
 import type { WifiNetwork } from '@/types/wifi';
 import { Card, CardContent } from '@/components/ui/card';
 import { Wifi, SignalHigh, SignalMedium, SignalLow, AlertTriangle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 interface WifiListItemProps {
   network: WifiNetwork;
+  onNetworkSelect: (network: WifiNetwork) => void;
+  isSelected: boolean;
 }
 
-export default function WifiListItem({ network }: WifiListItemProps) {
+export default function WifiListItem({ network, onNetworkSelect, isSelected }: WifiListItemProps) {
   const getSignalStrengthIndicator = (strength: number) => {
     if (strength > -60) {
       return <SignalHigh className="h-5 w-5 text-green-500" aria-label="Strong signal" />;
@@ -29,7 +33,18 @@ export default function WifiListItem({ network }: WifiListItemProps) {
   };
 
   return (
-    <Card className={`mb-3 shadow-md hover:shadow-lg transition-shadow duration-200 ${getSignalStrengthColorClass(network.strength)}`}>
+    <Card 
+      className={cn(
+        "mb-3 shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer",
+        getSignalStrengthColorClass(network.strength),
+        isSelected && "ring-2 ring-primary shadow-xl"
+      )}
+      onClick={() => onNetworkSelect(network)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onNetworkSelect(network)}}
+      aria-pressed={isSelected}
+    >
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
